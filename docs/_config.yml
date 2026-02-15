@@ -1,0 +1,4 @@
+title: "Sports vs Politics Classifier"
+description: "A comparative ML study using BoW/TF-IDF + 3+ classifiers."
+theme: minima
+markdown: kramdown
