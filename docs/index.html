@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sports vs Politics — Text Classifier</title>
+  <meta name="description" content="A classical NLP baseline study: BoW/TF-IDF + 3 ML models to classify documents as Sports or Politics." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>Sports vs Politics Classifier</span>
+      </div>
+      <nav class="topnav">
+        <a href="#dataset">Dataset</a>
+        <a href="#eda">EDA</a>
+        <a href="#methods">Methods</a>
+        <a href="#results">Results</a>
+        <a href="#repro">Repro</a>
+        <a href="#refs">References</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <section class="hero">
+        <h1>Sports vs Politics — Document Classification</h1>
+        <p class="subtitle">
+          A classical NLP baseline study using sparse text features (BoW / TF-IDF / n-grams) and 3+ ML models.
+        </p>
+
+        <div class="meta">
+          <span>Author: <strong>[Your Name]</strong></span>
+          <span>Course: <strong>[Course Name]</strong></span>
+          <span>Date: <strong>[DD Mon YYYY]</strong></span>
+        </div>
+
+        <div class="callout">
+          <strong>Goal:</strong> Build a classifier that reads a text document and labels it as either
+          <strong>Sports</strong> or <strong>Politics</strong>, then compare at least three ML techniques quantitatively.
+        </div>
+      </section>
+
+      <aside class="toc">
+        <h2>Table of contents</h2>
+        <ol>
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#dataset">Dataset</a></li>
+          <li><a href="#eda">Exploratory Data Analysis</a></li>
+          <li><a href="#methods">Feature Representations + Models</a></li>
+          <li><a href="#setup">Experimental Setup</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#errors">Error Analysis</a></li>
+          <li><a href="#limits">Limitations</a></li>
+          <li><a href="#repro">Reproducibility</a></li>
+          <li><a href="#refs">References</a></li>
+        </ol>
+      </aside>
+
+      <section id="problem">
+        <h2>1. Problem</h2>
+        <p>
+          We solve a binary text classification task:
+          given a document <em>x</em>, predict <em>y ∈ {sports, politics}</em>.
+        </p>
+        <p>
+          This project intentionally uses simple, explainable NLP baselines (BoW/TF-IDF + linear models),
+          because they are strong for topic classification and easy to analyze.
+        </p>
+      </section>
+
+      <section id="dataset">
+        <h2>2. Dataset</h2>
+        <p>
+          We use the BBC News Topic dataset (2004–2005), commonly used for topic classification benchmarks.
+          It contains 2,225 news articles across five classes: business, entertainment, politics, sport, tech.
+        </p>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>Binary task construction</h3>
+            <ul>
+              <li>Keep only articles labeled <code>sport</code> and <code>politics</code>.</li>
+              <li>Discard other categories to match the assignment statement exactly.</li>
+              <li>Final dataset size: <strong>928 documents</strong> (511 sport, 417 politics).</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Why this dataset?</h3>
+            <ul>
+              <li>Popular in ML education → lots of public EDA examples.</li>
+              <li>Clean labels for sport vs politics.</li>
+              <li>Text is long enough for n-gram features to shine.</li>
+            </ul>
+          </div>
+        </div>
+
+        <figure class="figure">
+          <img src="assets/figures/class_balance.png" alt="Class balance bar chart" />
+          <figcaption>
+            <strong>Figure:</strong> Class balance (sports vs politics). (You will generate this plot.)
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="eda">
+        <h2>3. Exploratory Data Analysis (EDA)</h2>
+        <p>
+          Before modeling, we inspect dataset balance, document length distributions, and “signature” terms that
+          differentiate the two classes.
+        </p>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>Suggested plots to include</h3>
+            <ol>
+              <li><strong>Class balance</strong> (bar chart)</li>
+              <li><strong>Word count distribution</strong> (histogram / KDE)</li>
+              <li><strong>Avg. word count per class</strong> (bar chart)</li>
+              <li><strong>Top TF-IDF terms per class</strong> (bar chart, 15–25 terms)</li>
+              <li><strong>Top bigrams per class</strong> (bar chart)</li>
+            </ol>
+          </div>
+
+          <div class="card">
+            <h3>What you should write (1–2 lines each)</h3>
+            <ul>
+              <li>Is the dataset balanced?</li>
+              <li>Are sports articles shorter/longer than politics?</li>
+              <li>Which tokens clearly signal each class?</li>
+              <li>Any overlap words causing confusion?</li>
+            </ul>
+          </div>
+        </div>
+
+        <figure class="figure">
+          <img src="assets/figures/word_count_dist.png" alt="Word count distribution plot" />
+          <figcaption><strong>Figure:</strong> Word count distribution by class. (Generate this plot.)</figcaption>
+        </figure>
+
+        <figure class="figure">
+          <img src="assets/figures/top_terms.png" alt="Top terms plot" />
+          <figcaption><strong>Figure:</strong> Top TF-IDF terms that distinguish sports vs politics. (Generate this plot.)</figcaption>
+        </figure>
+      </section>
+
+      <section id="methods">
+        <h2>4. Feature Representations + Models</h2>
+
+        <h3>Feature representations</h3>
+        <ul>
+          <li><strong>Bag-of-Words (BoW):</strong> raw token counts.</li>
+          <li><strong>TF-IDF:</strong> downweights frequent words, upweights discriminative terms.</li>
+          <li><strong>n-grams:</strong> capture short phrases (e.g., “prime minister”, “world cup”).</li>
+        </ul>
+
+        <h3>Models compared (at least 3)</h3>
+        <div class="grid3">
+          <div class="card">
+            <h4>Multinomial Naive Bayes</h4>
+            <p>Strong baseline for sparse counts; fast and surprisingly competitive.</p>
+          </div>
+          <div class="card">
+            <h4>Logistic Regression</h4>
+            <p>Linear classifier with calibrated probabilities; very interpretable weights.</p>
+          </div>
+          <div class="card">
+            <h4>Linear SVM</h4>
+            <p>Often best-performing classic baseline for text classification.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Note:</strong> We keep preprocessing minimal to avoid deleting signal (e.g., named entities).
+          Stopword removal and stemming are treated as “ablation experiments” rather than defaults.
+        </div>
+      </section>
+
+      <section id="setup">
+        <h2>5. Experimental Setup</h2>
+        <ul>
+          <li><strong>Split strategy:</strong> stratified train/test (e.g., 80/20) OR 5-fold stratified CV.</li>
+          <li><strong>Metrics:</strong> Accuracy + Precision/Recall/F1 (macro) + confusion matrix.</li>
+          <li><strong>Fair comparison:</strong> same split, same preprocessing, tune hyperparameters consistently.</li>
+        </ul>
+      </section>
+
+      <section id="results">
+        <h2>6. Results</h2>
+
+        <p>
+          This section will contain your final numbers and visuals after training.
+        </p>
+
+        <figure class="figure">
+          <img src="assets/figures/model_comparison.png" alt="Model comparison chart" />
+          <figcaption><strong>Figure:</strong> Model comparison (Accuracy / F1). (Generate this plot.)</figcaption>
+        </figure>
+
+        <figure class="figure">
+          <img src="assets/figures/confusion_matrix.png" alt="Confusion matrix" />
+          <figcaption><strong>Figure:</strong> Confusion matrix for the best model. (Generate this plot.)</figcaption>
+        </figure>
+
+        <div class="card">
+          <h3>Result table (fill after experiments)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Features</th>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>F1 (macro)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>BoW</td><td>Naive Bayes</td><td>—</td><td>—</td></tr>
+              <tr><td>TF-IDF</td><td>Logistic Regression</td><td>—</td><td>—</td></tr>
+              <tr><td>TF-IDF (1–2 grams)</td><td>Linear SVM</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="errors">
+        <h2>7. Error Analysis</h2>
+        <ul>
+          <li>Show 5–10 misclassified examples and explain why they’re hard.</li>
+          <li>Look for overlap topics (e.g., “government funding of sports”, “international events”).</li>
+          <li>Check if headlines-only vs full-article changes difficulty (if you experiment).</li>
+        </ul>
+      </section>
+
+      <section id="limits">
+        <h2>8. Limitations</h2>
+        <ul>
+          <li><strong>Dataset age:</strong> articles are from 2004–2005; language and entities shift over time.</li>
+          <li><strong>Topic ambiguity:</strong> sports governance/policy can resemble politics text.</li>
+          <li><strong>Domain shift:</strong> models trained on news may not generalize to tweets/comments.</li>
+        </ul>
+      </section>
+
+      <section id="repro">
+        <h2>9. Reproducibility</h2>
+        <p>
+          Add: environment details, dataset link(s), and exact steps to reproduce figures and results.
+        </p>
+        <div class="callout">
+          <strong>Planned:</strong> Provide a single command workflow (EDA → train → evaluate → export figures).
+        </div>
+      </section>
+
+      <section id="refs">
+        <h2>10. References</h2>
+        <ul>
+          <li>BBC dataset description / benchmark repository</li>
+          <li>Any Kaggle notebook(s) you used for EDA inspiration</li>
+          <li>Scikit-learn docs for models/metrics</li>
+        </ul>
+
+        <p class="footnote">
+          Dataset note: all rights in the original BBC article content belong to the BBC (as stated by dataset distributors).
+        </p>
+      </section>
+
+      <footer class="footer">
+        <p>© [Your Name] — Sports vs Politics Classifier</p>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>
