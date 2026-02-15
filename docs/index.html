@@ -76,38 +76,93 @@
 
       <section id="dataset">
         <h2>2. Dataset</h2>
+
         <p>
-          We use the BBC News Topic dataset (2004–2005), commonly used for topic classification benchmarks.
-          It contains 2,225 news articles across five classes: business, entertainment, politics, sport, tech.
+            We use the BBC News Topic dataset (2004–2005), a popular benchmark for topic classification.
+            It contains <strong>2,225</strong> articles labeled into five categories:
+            business, entertainment, politics, sport, and tech.
         </p>
 
-        <div class="grid2">
-          <div class="card">
-            <h3>Binary task construction</h3>
-            <ul>
-              <li>Keep only articles labeled <code>sport</code> and <code>politics</code>.</li>
-              <li>Discard other categories to match the assignment statement exactly.</li>
-              <li>Final dataset size: <strong>928 documents</strong> (511 sport, 417 politics).</li>
-            </ul>
-          </div>
+        <div class="callout">
+            <strong>Binary task construction:</strong> We filter the dataset to only
+            <code>sport</code> and <code>politics</code> to match the assignment statement exactly.
+            The resulting dataset contains <strong>928 documents</strong>:
+            <strong>511 sport</strong> and <strong>417 politics</strong>.
+        </div>
 
-          <div class="card">
-            <h3>Why this dataset?</h3>
+        <div class="grid2">
+            <div class="card">
+            <h3>Data source</h3>
             <ul>
-              <li>Popular in ML education → lots of public EDA examples.</li>
-              <li>Clean labels for sport vs politics.</li>
-              <li>Text is long enough for n-gram features to shine.</li>
+                <li>
+                Practical download: Kaggle CSV commonly distributed as <code>bbc-text.csv</code>
+                with columns like <code>category</code> and <code>text</code>.
+                </li>
+                <li>
+                Original dataset distribution is maintained by Derek Greene as “BBC Datasets”
+                for research/benchmarking.
+                </li>
+                <li>
+                Copyright note: the original article content is owned by the BBC, so we do not
+                re-upload the raw text in this repository.
+                </li>
             </ul>
-          </div>
+            </div>
+
+            <div class="card">
+            <h3>Schema</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Meaning</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>category</code></td>
+                    <td>One of {business, entertainment, politics, sport, tech}</td>
+                </tr>
+                <tr>
+                    <td><code>text</code></td>
+                    <td>Full article text</td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="footnote">
+                We only keep rows where <code>category ∈ {sport, politics}</code>.
+            </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Collection and curation procedure</h3>
+            <ol>
+            <li><strong>Download</strong> the CSV dataset locally (do not commit it to GitHub).</li>
+            <li><strong>Validate schema</strong>: ensure required columns exist and remove null/empty texts.</li>
+            <li><strong>Deduplicate</strong> (recommended): drop exact duplicates of <code>text</code>.</li>
+            <li><strong>Filter classes</strong>: keep only <code>sport</code> and <code>politics</code>.</li>
+            <li>
+                <strong>Split</strong>: use a stratified split to preserve class ratio
+                (e.g., 80/20 with a fixed random seed) or stratified k-fold cross-validation.
+            </li>
+            </ol>
         </div>
 
         <figure class="figure">
-          <img src="assets/figures/class_balance.png" alt="Class balance bar chart" />
-          <figcaption>
-            <strong>Figure:</strong> Class balance (sports vs politics). (You will generate this plot.)
-          </figcaption>
+            <img src="assets/figures/class_balance.png" alt="Class balance bar chart" />
+            <figcaption>
+            <strong>Figure:</strong> Class distribution after filtering (sport vs politics).
+            </figcaption>
         </figure>
-      </section>
+
+        <figure class="figure">
+            <img src="assets/figures/word_count_dist.png" alt="Word count distribution plot" />
+            <figcaption>
+            <strong>Figure:</strong> Document length distribution (word counts) by class.
+            </figcaption>
+        </figure>
+        </section>
 
       <section id="eda">
         <h2>3. Exploratory Data Analysis (EDA)</h2>
