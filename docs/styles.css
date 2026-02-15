@@ -122,10 +122,15 @@ h4{
 }
 
 .card{
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  background: #ffffff;                 /* light card */
+  border: 1px solid rgba(17,19,24,0.12);
+  border-radius: 14px;
   padding: 16px 16px;
+  color: #111318;                       /* force readable text */
+}
+
+.card h3, .card h4, .card p, .card li, .card table, .card td, .card th{
+  color: #111318;                       /* ensure no inherited low-contrast */
 }
 
 .grid2{
