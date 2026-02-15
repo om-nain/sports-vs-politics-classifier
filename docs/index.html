@@ -170,21 +170,21 @@
         </p>
 
         <div class="grid2">
-            <div class="card" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
-            <h3 style="color:#111318;">What we check in EDA</h3>
-            <ul style="color:#111318;">
+            <div class="card">
+            <h3>What we check in EDA</h3>
+            <ul>
                 <li><strong>Balance:</strong> enough samples per class? (See the Dataset section.)</li>
                 <li><strong>Length:</strong> do classes differ in typical size? (See the Dataset section.)</li>
                 <li><strong>Vocabulary:</strong> do frequent words match the intended topic?</li>
-                <li><strong>Ambiguity:</strong> are there mixed-topic documents (sports governance, elections in sports bodies, etc.)?</li>
+                <li><strong>Ambiguity:</strong> are there mixed-topic documents (sports governance, funding/policy, etc.)?</li>
             </ul>
             </div>
 
-            <div class="card" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
-            <h3 style="color:#111318;">EDA-driven design decisions</h3>
-            <ul style="color:#111318;">
+            <div class="card">
+            <h3>EDA-driven design decisions</h3>
+            <ul>
                 <li>Use <strong>stratified splits</strong> to preserve the class ratio.</li>
-                <li>Report <strong>Macro-F1</strong> alongside Accuracy (more robust if imbalance exists).</li>
+                <li>Report <strong>Macro-F1</strong> alongside Accuracy (robust if imbalance exists).</li>
                 <li>Prefer <strong>TF-IDF</strong> as a strong baseline for sparse text.</li>
                 <li>Compare <strong>unigrams</strong> vs <strong>1–2 grams</strong> (phrases can be sharp signals).</li>
                 <li>Keep preprocessing minimal by default; treat stemming/lemmatization as an ablation.</li>
@@ -192,8 +192,8 @@
             </div>
         </div>
 
-        <div class="callout" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
-            <strong>Note:</strong> We already include the class balance and document-length plots in the
+        <div class="callout">
+            <strong>Note:</strong> Class balance and document-length plots are already included in the
             <a href="#dataset">Dataset section</a>. Here, we focus on qualitative vocabulary sanity checks.
         </div>
 
@@ -215,15 +215,15 @@
             </figure>
         </div>
 
-        <div class="callout" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
+        <div class="callout">
             <strong>Interpretation guide:</strong>
             If the politics cloud is dominated by institutional/election terms and the sport cloud is dominated by match/team/event terms,
             the dataset is consistent with the task. Overlap tokens (e.g., “win”, country names, “campaign”) hint at likely confusion cases.
         </div>
 
-        <div class="card" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
-            <h3 style="color:#111318;">EDA summary</h3>
-            <ul style="color:#111318;">
+        <div class="card">
+            <h3>EDA summary</h3>
+            <ul>
             <li>We avoid relying on document length as a shortcut signal.</li>
             <li>Vocabulary/phrase patterns motivate BoW/TF-IDF + (1–2)-gram experiments.</li>
             <li>Next, we compare at least three ML models under a consistent evaluation protocol.</li>
@@ -376,30 +376,97 @@
       <section id="refs">
         <h2>7. References</h2>
 
-        <ul>
-            <li>
-            BBC Dataset distribution (Derek Greene), including copyright/use notes.
-            </li>
-            <li>
-            BBC News Topic dataset card / CSV references used for loading and schema.
-            </li>
-            <li>
-            Scikit-learn documentation: TF-IDF, Naive Bayes, Logistic Regression, Linear SVM, and evaluation metrics.
-            </li>
-        </ul>
-
         <div class="card">
-            <h3>Citation-ready links (recommended)</h3>
+            <h3>Dataset</h3>
             <ul>
-            <li>Derek Greene — BBC datasets (source + usage notes)</li>
-            <li>BBC News Topic dataset card (metadata + schema)</li>
-            <li>scikit-learn user guide: text feature extraction (CountVectorizer / TfidfVectorizer)</li>
-            <li>scikit-learn docs: MultinomialNB, LogisticRegression, LinearSVC</li>
-            <li>scikit-learn docs: classification_report, confusion_matrix</li>
+            <li>
+                Derek Greene — BBC Datasets (source & usage notes):
+                <a href="https://derekgreene.com/bbc/" target="_blank" rel="noopener noreferrer">
+                https://derekgreene.com/bbc/
+                </a>
+            </li>
+            <li>
+                Hugging Face dataset card (BBC News Topic / SetFit):
+                <a href="https://huggingface.co/datasets/SetFit/bbc-news" target="_blank" rel="noopener noreferrer">
+                https://huggingface.co/datasets/SetFit/bbc-news
+                </a>
+            </li>
             </ul>
             <p class="footnote">
-            Add direct URLs in your final version (and in the report) once you finalize your exact dataset download source and tools.
+            Note: BBC owns the original article content; this repository does not re-upload raw text.
             </p>
+        </div>
+
+        <div class="card">
+            <h3>Text feature extraction</h3>
+            <ul>
+            <li>
+                scikit-learn — Text feature extraction (CountVectorizer / TfidfVectorizer):
+                <a href="https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction
+                </a>
+            </li>
+            <li>
+                CountVectorizer docs:
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html
+                </a>
+            </li>
+            <li>
+                TfidfVectorizer docs:
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
+                </a>
+            </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Models</h3>
+            <ul>
+            <li>
+                Multinomial Naive Bayes:
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html
+                </a>
+            </li>
+            <li>
+                Logistic Regression:
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+                </a>
+            </li>
+            <li>
+                Linear SVM (LinearSVC):
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html
+                </a>
+            </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Evaluation</h3>
+            <ul>
+            <li>
+                classification_report:
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html
+                </a>
+            </li>
+            <li>
+                confusion_matrix:
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+                </a>
+            </li>
+            <li>
+                StratifiedKFold (for stratified cross-validation):
+                <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html" target="_blank" rel="noopener noreferrer">
+                https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html
+                </a>
+            </li>
+            </ul>
         </div>
         </section>
 
