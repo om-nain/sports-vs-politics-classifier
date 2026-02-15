@@ -19,8 +19,8 @@
         <a href="#dataset">Dataset</a>
         <a href="#eda">EDA</a>
         <a href="#methods">Methods</a>
-        <a href="#results">Results</a>
-        <a href="#repro">Repro</a>
+        <a href="#setup">Experimental Setup</a>
+        <a href="#conclusion">Conclusions</a>
         <a href="#refs">References</a>
       </nav>
     </div>
@@ -49,16 +49,13 @@
       <aside class="toc">
         <h2>Table of contents</h2>
         <ol>
-          <li><a href="#problem">Problem</a></li>
-          <li><a href="#dataset">Dataset</a></li>
-          <li><a href="#eda">Exploratory Data Analysis</a></li>
-          <li><a href="#methods">Feature Representations + Models</a></li>
-          <li><a href="#setup">Experimental Setup</a></li>
-          <li><a href="#results">Results</a></li>
-          <li><a href="#errors">Error Analysis</a></li>
-          <li><a href="#limits">Limitations</a></li>
-          <li><a href="#repro">Reproducibility</a></li>
-          <li><a href="#refs">References</a></li>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#dataset">Dataset</a></li>
+            <li><a href="#eda">EDA</a></li>
+            <li><a href="#methods">Methods</a></li>
+            <li><a href="#setup">Experimental Setup</a></li>
+            <li><a href="#conclusion">Conclusions</a></li>
+            <li><a href="#refs">References</a></li>
         </ol>
       </aside>
 
@@ -235,100 +232,144 @@
         </section>
 
       <section id="methods">
-        <h2>4. Feature Representations + Models</h2>
+        <h2>4. Methods</h2>
 
-        <h3>Feature representations</h3>
-        <ul>
-          <li><strong>Bag-of-Words (BoW):</strong> raw token counts.</li>
-          <li><strong>TF-IDF:</strong> downweights frequent words, upweights discriminative terms.</li>
-          <li><strong>n-grams:</strong> capture short phrases (e.g., “prime minister”, “world cup”).</li>
-        </ul>
+        <p>
+            This project uses classical supervised machine learning for text classification.
+            We convert raw documents into sparse feature vectors (BoW / TF-IDF / n-grams),
+            then train multiple classifiers and compare them quantitatively under the same evaluation protocol.
+        </p>
 
-        <h3>Models compared (at least 3)</h3>
-        <div class="grid3">
-          <div class="card">
-            <h4>Multinomial Naive Bayes</h4>
-            <p>Strong baseline for sparse counts; fast and surprisingly competitive.</p>
-          </div>
-          <div class="card">
-            <h4>Logistic Regression</h4>
-            <p>Linear classifier with calibrated probabilities; very interpretable weights.</p>
-          </div>
-          <div class="card">
-            <h4>Linear SVM</h4>
-            <p>Often best-performing classic baseline for text classification.</p>
-          </div>
+        <div class="grid2">
+            <div class="card">
+            <h3>Text preprocessing</h3>
+            <ul>
+                <li><strong>Normalization:</strong> lowercase text; standardize whitespace.</li>
+                <li><strong>Noise handling:</strong> keep punctuation handling minimal to avoid deleting signal.</li>
+                <li><strong>Stopwords:</strong> treated as an ablation (we evaluate with/without).</li>
+                <li><strong>Stemming/Lemmatization:</strong> optional ablation (can reduce interpretability).</li>
+            </ul>
+            <p class="footnote">
+                Rationale: for topic classification on news text, overly aggressive preprocessing can remove useful named entities and phrases.
+            </p>
+            </div>
+
+            <div class="card">
+            <h3>Feature representations</h3>
+            <ul>
+                <li><strong>Bag-of-Words (BoW):</strong> count-based sparse vectors.</li>
+                <li><strong>TF-IDF:</strong> reweights terms to emphasize discriminative vocabulary.</li>
+                <li><strong>n-grams:</strong> unigram vs (1–2)-gram features to capture short phrases.</li>
+            </ul>
+            <p class="footnote">
+                Typical parameters: <code>min_df</code> to remove rare noise terms, <code>max_df</code> to suppress very common terms, and a capped vocabulary size.
+            </p>
+            </div>
         </div>
 
-        <div class="callout">
-          <strong>Note:</strong> We keep preprocessing minimal to avoid deleting signal (e.g., named entities).
-          Stopword removal and stemming are treated as “ablation experiments” rather than defaults.
+        <div class="card">
+            <h3>Models compared (≥ 3)</h3>
+            <p>
+            We compare three strong baselines for sparse text features:
+            </p>
+            <ul>
+            <li><strong>Multinomial Naive Bayes (MNB):</strong> fast generative baseline; performs well on word-count features.</li>
+            <li><strong>Logistic Regression (LR):</strong> linear discriminative model; interpretable weights and strong performance with TF-IDF.</li>
+            <li><strong>Linear SVM (LinearSVC):</strong> often best classic baseline for high-dimensional sparse NLP features.</li>
+            </ul>
+
+            <div class="callout">
+            <strong>Why these models?</strong> They are standard in text classification literature, scale well to sparse vectors, and allow clear comparisons.
+            </div>
         </div>
-      </section>
+
+        <div class="card">
+            <h3>Comparison matrix (what we actually test)</h3>
+            <ul>
+            <li><strong>Features:</strong> BoW vs TF-IDF</li>
+            <li><strong>n-grams:</strong> unigram vs (1–2)-grams</li>
+            <li><strong>Models:</strong> MNB vs LR vs Linear SVM</li>
+            </ul>
+            <p class="footnote">
+            All experiments are run with the same split protocol and the same metric set to ensure a fair comparison.
+            </p>
+        </div>
+        </section>
 
       <section id="setup">
         <h2>5. Experimental Setup</h2>
-        <ul>
-          <li><strong>Split strategy:</strong> stratified train/test (e.g., 80/20) OR 5-fold stratified CV.</li>
-          <li><strong>Metrics:</strong> Accuracy + Precision/Recall/F1 (macro) + confusion matrix.</li>
-          <li><strong>Fair comparison:</strong> same split, same preprocessing, tune hyperparameters consistently.</li>
-        </ul>
-      </section>
-
-      <section id="results">
-        <h2>6. Results</h2>
 
         <p>
-          This section will contain your final numbers and visuals after training.
+            We evaluate all model–feature combinations under a consistent protocol to ensure that improvements are due to
+            modeling choices rather than differences in data splits or preprocessing.
         </p>
 
-        <figure class="figure">
-          <img src="assets/figures/model_comparison.png" alt="Model comparison chart" />
-          <figcaption><strong>Figure:</strong> Model comparison (Accuracy / F1). (Generate this plot.)</figcaption>
-        </figure>
+        <div class="grid2">
+            <div class="card">
+            <h3>Train / test strategy</h3>
+            <ul>
+                <li><strong>Split:</strong> stratified train/test (e.g., 80/20) with a fixed random seed.</li>
+                <li><strong>Alternative:</strong> stratified k-fold cross-validation for more stable estimates.</li>
+                <li><strong>Leakage control:</strong> apply vectorizer fitting only on the training portion.</li>
+            </ul>
+            </div>
 
-        <figure class="figure">
-          <img src="assets/figures/confusion_matrix.png" alt="Confusion matrix" />
-          <figcaption><strong>Figure:</strong> Confusion matrix for the best model. (Generate this plot.)</figcaption>
-        </figure>
+            <div class="card">
+            <h3>Metrics reported</h3>
+            <ul>
+                <li><strong>Accuracy:</strong> overall correctness.</li>
+                <li><strong>Precision / Recall / F1:</strong> per-class behavior.</li>
+                <li><strong>Macro-F1:</strong> treats both classes equally (recommended under imbalance).</li>
+                <li><strong>Confusion matrix:</strong> interpretable error breakdown.</li>
+            </ul>
+            </div>
+        </div>
 
         <div class="card">
-          <h3>Result table (fill after experiments)</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Features</th>
-                <th>Model</th>
-                <th>Accuracy</th>
-                <th>F1 (macro)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>BoW</td><td>Naive Bayes</td><td>—</td><td>—</td></tr>
-              <tr><td>TF-IDF</td><td>Logistic Regression</td><td>—</td><td>—</td></tr>
-              <tr><td>TF-IDF (1–2 grams)</td><td>Linear SVM</td><td>—</td><td>—</td></tr>
-            </tbody>
-          </table>
+            <h3>Hyperparameter policy (fair comparison)</h3>
+            <ul>
+            <li>Use a small, consistent tuning budget for each model (e.g., a limited grid).</li>
+            <li>Keep the same split (or CV folds) across all experiments.</li>
+            <li>Report the final chosen hyperparameters for reproducibility.</li>
+            </ul>
+            <p class="footnote">
+            Example knobs: MNB <code>alpha</code>; LR/SVM regularization strength <code>C</code>; TF-IDF <code>ngram_range</code>, <code>min_df</code>, <code>max_df</code>.
+            </p>
         </div>
-      </section>
+        </section>
 
-      <section id="errors">
-        <h2>7. Error Analysis</h2>
-        <ul>
-          <li>Show 5–10 misclassified examples and explain why they’re hard.</li>
-          <li>Look for overlap topics (e.g., “government funding of sports”, “international events”).</li>
-          <li>Check if headlines-only vs full-article changes difficulty (if you experiment).</li>
-        </ul>
-      </section>
+      <section id="conclusion">
+        <h2>6. Conclusions</h2>
 
-      <section id="limits">
-        <h2>8. Limitations</h2>
-        <ul>
-          <li><strong>Dataset age:</strong> articles are from 2004–2005; language and entities shift over time.</li>
-          <li><strong>Topic ambiguity:</strong> sports governance/policy can resemble politics text.</li>
-          <li><strong>Domain shift:</strong> models trained on news may not generalize to tweets/comments.</li>
-        </ul>
-      </section>
+        <div class="card">
+            <h3>What this study demonstrates</h3>
+            <ul>
+            <li>A simple ML pipeline can classify news text into <strong>Sports</strong> vs <strong>Politics</strong> reliably using sparse features.</li>
+            <li><strong>TF-IDF + linear models</strong> (Logistic Regression / Linear SVM) are expected to be strong baselines.</li>
+            <li><strong>n-grams</strong> help capture short phrases that are highly indicative of topic.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Expected failure modes</h3>
+            <ul>
+            <li><strong>Mixed-topic articles:</strong> sports governance, funding, international events with political framing.</li>
+            <li><strong>Entity-heavy text:</strong> country names and public figures can appear in both classes.</li>
+            <li><strong>Short documents:</strong> limited vocabulary reduces confidence and increases ambiguity.</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <strong>Next step:</strong> After training, we will add a results table (Accuracy + Macro-F1),
+            a confusion matrix for the best model, and a brief error analysis with misclassified examples.
+        </div>
+        </section>
+
+      
+
+      
+
+      
 
       <section id="repro">
         <h2>9. Reproducibility</h2>
@@ -341,17 +382,34 @@
       </section>
 
       <section id="refs">
-        <h2>10. References</h2>
+        <h2>7. References</h2>
+
         <ul>
-          <li>BBC dataset description / benchmark repository</li>
-          <li>Any Kaggle notebook(s) you used for EDA inspiration</li>
-          <li>Scikit-learn docs for models/metrics</li>
+            <li>
+            BBC Dataset distribution (Derek Greene), including copyright/use notes.
+            </li>
+            <li>
+            BBC News Topic dataset card / CSV references used for loading and schema.
+            </li>
+            <li>
+            Scikit-learn documentation: TF-IDF, Naive Bayes, Logistic Regression, Linear SVM, and evaluation metrics.
+            </li>
         </ul>
 
-        <p class="footnote">
-          Dataset note: all rights in the original BBC article content belong to the BBC (as stated by dataset distributors).
-        </p>
-      </section>
+        <div class="card">
+            <h3>Citation-ready links (recommended)</h3>
+            <ul>
+            <li>Derek Greene — BBC datasets (source + usage notes)</li>
+            <li>BBC News Topic dataset card (metadata + schema)</li>
+            <li>scikit-learn user guide: text feature extraction (CountVectorizer / TfidfVectorizer)</li>
+            <li>scikit-learn docs: MultinomialNB, LogisticRegression, LinearSVC</li>
+            <li>scikit-learn docs: classification_report, confusion_matrix</li>
+            </ul>
+            <p class="footnote">
+            Add direct URLs in your final version (and in the report) once you finalize your exact dataset download source and tools.
+            </p>
+        </div>
+        </section>
 
       <footer class="footer">
         <p>© [Your Name] — Sports vs Politics Classifier</p>
