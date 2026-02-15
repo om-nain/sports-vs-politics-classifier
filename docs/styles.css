@@ -1,10 +1,10 @@
 :root{
-  --bg: #0b0c0f;
-  --panel: #11131a;
-  --text: #e9eaf0;
-  --muted: #b6b9c6;
-  --line: rgba(255,255,255,0.10);
-  --link: #8ab4ff;
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --text: #1f2430;
+  --muted: #5c6370;
+  --line: rgba(0,0,0,0.08);
+  --link: #2f6fed;
   --maxw: 860px;
   --radius: 14px;
 }
