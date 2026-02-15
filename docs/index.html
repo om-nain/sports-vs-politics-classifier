@@ -168,98 +168,68 @@
         <h2>3. Exploratory Data Analysis (EDA)</h2>
 
         <p>
-            Before training models, we examine (i) class balance, (ii) document length distribution, and
-            (iii) vocabulary signals. This sanity-checks the dataset and motivates our feature choices
-            (BoW vs TF-IDF, unigrams vs n-grams).
+            Before training models, we inspect dataset balance, document-length patterns, and vocabulary signals.
+            The goal is to sanity-check the labels and choose sensible text representations (BoW vs TF-IDF, unigrams vs n-grams).
         </p>
 
         <div class="grid2">
-            <div class="card">
-            <h3>What we check in EDA</h3>
-            <ul>
-                <li><strong>Balance:</strong> do we have enough samples per class?</li>
-                <li><strong>Length:</strong> do classes differ in typical document size?</li>
-                <li><strong>Vocabulary:</strong> which words appear frequently within each class?</li>
-                <li><strong>Ambiguity:</strong> are there “mixed-topic” documents?</li>
+            <div class="card" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
+            <h3 style="color:#111318;">What we check in EDA</h3>
+            <ul style="color:#111318;">
+                <li><strong>Balance:</strong> enough samples per class? (See the Dataset section.)</li>
+                <li><strong>Length:</strong> do classes differ in typical size? (See the Dataset section.)</li>
+                <li><strong>Vocabulary:</strong> do frequent words match the intended topic?</li>
+                <li><strong>Ambiguity:</strong> are there mixed-topic documents (sports governance, elections in sports bodies, etc.)?</li>
             </ul>
             </div>
 
-            <div class="card">
-            <h3>Design decisions driven by EDA</h3>
-            <ul>
-                <li>Use <strong>stratified splits</strong> (preserve class ratio in train/test).</li>
-                <li>Prefer <strong>TF-IDF</strong> as a strong baseline over raw counts.</li>
-                <li>Evaluate both <strong>unigrams</strong> and <strong>n-grams</strong> (phrases can be highly informative).</li>
-                <li>Report <strong>Macro-F1</strong> along with accuracy (more robust if imbalance exists).</li>
-            </ul>
-            </div>
-        </div>
-
-        <figure class="figure">
-            <img src="assets/figures/class_balance.png" alt="Class balance bar chart" />
-            <figcaption>
-            <strong>EDA 1:</strong> Class balance (sport vs politics). We preserve this ratio using a stratified split.
-            </figcaption>
-        </figure>
-
-        <figure class="figure">
-            <img src="assets/figures/word_count_dist.png" alt="Word count distribution plot" />
-            <figcaption>
-            <strong>EDA 2:</strong> Document length distribution (word counts) by class.
-            Significant overlap suggests that vocabulary (not length alone) drives classification.
-            </figcaption>
-        </figure>
-
-        <div class="grid2">
-            <div class="card">
-            <h3>What length tells us</h3>
-            <ul>
-                <li>If one class is consistently shorter, models might partially exploit length as a shortcut.</li>
-                <li>Large overlap usually implies the discriminative signal is mostly lexical/phrase-level.</li>
-                <li>Very short documents are typically harder due to low information content.</li>
-            </ul>
-            </div>
-
-            <div class="card">
-            <h3>Vocabulary signals (quick sanity check)</h3>
-            <ul>
-                <li>Sports should surface match/event terminology (e.g., teams, scores, tournaments).</li>
-                <li>Politics should surface institutional terminology (e.g., parties, elections, governance).</li>
-                <li>Overlap (e.g., “campaign”, “win”, country names) can create confusion cases.</li>
+            <div class="card" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
+            <h3 style="color:#111318;">EDA-driven design decisions</h3>
+            <ul style="color:#111318;">
+                <li>Use <strong>stratified splits</strong> to preserve the class ratio.</li>
+                <li>Report <strong>Macro-F1</strong> alongside Accuracy (more robust if imbalance exists).</li>
+                <li>Prefer <strong>TF-IDF</strong> as a strong baseline for sparse text.</li>
+                <li>Compare <strong>unigrams</strong> vs <strong>1–2 grams</strong> (phrases can be sharp signals).</li>
+                <li>Keep preprocessing minimal by default; treat stemming/lemmatization as an ablation.</li>
             </ul>
             </div>
         </div>
 
-        <h3>EDA 3: Word clouds (class vocabulary snapshot)</h3>
+        <div class="callout" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
+            <strong>Note:</strong> We already include the class balance and document-length plots in the
+            <a href="#dataset">Dataset section</a>. Here, we focus on qualitative vocabulary sanity checks.
+        </div>
+
+        <h3>EDA: Vocabulary snapshot via word clouds</h3>
         <p>
-            Word clouds provide a fast qualitative view of high-frequency vocabulary within each class.
-            While not a quantitative feature-importance method, they are useful for sanity-checking:
-            the dominant words should align with the intended labels.
+            Word clouds provide a fast qualitative view of frequent vocabulary within each class. They are not a
+            substitute for quantitative feature importance, but they help confirm that the dataset labels “look right”.
         </p>
 
         <div class="grid2">
             <figure class="figure">
             <img src="assets/figures/wordcloud_sport.png" alt="Word cloud for Sport class" />
-            <figcaption><strong>EDA 3a:</strong> Word cloud for <code>sport</code>.</figcaption>
+            <figcaption><strong>EDA:</strong> Word cloud for <code>sport</code>.</figcaption>
             </figure>
 
             <figure class="figure">
             <img src="assets/figures/wordcloud_politics.png" alt="Word cloud for Politics class" />
-            <figcaption><strong>EDA 3b:</strong> Word cloud for <code>politics</code>.</figcaption>
+            <figcaption><strong>EDA:</strong> Word cloud for <code>politics</code>.</figcaption>
             </figure>
         </div>
 
-        <div class="callout">
-            <strong>Important note:</strong> Word clouds are qualitative.
-            Our final conclusions will rely on quantitative evaluation of models trained with BoW/TF-IDF and n-grams.
+        <div class="callout" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
+            <strong>Interpretation guide:</strong>
+            If the politics cloud is dominated by institutional/election terms and the sport cloud is dominated by match/team/event terms,
+            the dataset is consistent with the task. Overlap tokens (e.g., “win”, country names, “campaign”) hint at likely confusion cases.
         </div>
 
-        <div class="card">
-            <h3>EDA summary</h3>
-            <ul>
-            <li>We preserve class ratio with a stratified split and report Accuracy + Macro-F1.</li>
-            <li>Document length overlap suggests vocabulary/phrases are the main discriminative signal.</li>
-            <li>Next, we compare BoW vs TF-IDF and at least three ML models under the same evaluation protocol.</li>
+        <div class="card" style="background:#e6f4ff;border:1px solid #b6dbff;color:#111318;">
+            <h3 style="color:#111318;">EDA summary</h3>
+            <ul style="color:#111318;">
+            <li>We avoid relying on document length as a shortcut signal.</li>
+            <li>Vocabulary/phrase patterns motivate BoW/TF-IDF + (1–2)-gram experiments.</li>
+            <li>Next, we compare at least three ML models under a consistent evaluation protocol.</li>
             </ul>
         </div>
         </section>
