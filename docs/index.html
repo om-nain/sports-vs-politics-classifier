@@ -166,44 +166,103 @@
 
       <section id="eda">
         <h2>3. Exploratory Data Analysis (EDA)</h2>
+
         <p>
-          Before modeling, we inspect dataset balance, document length distributions, and “signature” terms that
-          differentiate the two classes.
+            Before training models, we examine (i) class balance, (ii) document length distribution, and
+            (iii) vocabulary signals. This sanity-checks the dataset and motivates our feature choices
+            (BoW vs TF-IDF, unigrams vs n-grams).
         </p>
 
         <div class="grid2">
-          <div class="card">
-            <h3>Suggested plots to include</h3>
-            <ol>
-              <li><strong>Class balance</strong> (bar chart)</li>
-              <li><strong>Word count distribution</strong> (histogram / KDE)</li>
-              <li><strong>Avg. word count per class</strong> (bar chart)</li>
-              <li><strong>Top TF-IDF terms per class</strong> (bar chart, 15–25 terms)</li>
-              <li><strong>Top bigrams per class</strong> (bar chart)</li>
-            </ol>
-          </div>
-
-          <div class="card">
-            <h3>What you should write (1–2 lines each)</h3>
+            <div class="card">
+            <h3>What we check in EDA</h3>
             <ul>
-              <li>Is the dataset balanced?</li>
-              <li>Are sports articles shorter/longer than politics?</li>
-              <li>Which tokens clearly signal each class?</li>
-              <li>Any overlap words causing confusion?</li>
+                <li><strong>Balance:</strong> do we have enough samples per class?</li>
+                <li><strong>Length:</strong> do classes differ in typical document size?</li>
+                <li><strong>Vocabulary:</strong> which words appear frequently within each class?</li>
+                <li><strong>Ambiguity:</strong> are there “mixed-topic” documents?</li>
             </ul>
-          </div>
+            </div>
+
+            <div class="card">
+            <h3>Design decisions driven by EDA</h3>
+            <ul>
+                <li>Use <strong>stratified splits</strong> (preserve class ratio in train/test).</li>
+                <li>Prefer <strong>TF-IDF</strong> as a strong baseline over raw counts.</li>
+                <li>Evaluate both <strong>unigrams</strong> and <strong>n-grams</strong> (phrases can be highly informative).</li>
+                <li>Report <strong>Macro-F1</strong> along with accuracy (more robust if imbalance exists).</li>
+            </ul>
+            </div>
         </div>
 
         <figure class="figure">
-          <img src="assets/figures/word_count_dist.png" alt="Word count distribution plot" />
-          <figcaption><strong>Figure:</strong> Word count distribution by class. (Generate this plot.)</figcaption>
+            <img src="assets/figures/class_balance.png" alt="Class balance bar chart" />
+            <figcaption>
+            <strong>EDA 1:</strong> Class balance (sport vs politics). We preserve this ratio using a stratified split.
+            </figcaption>
         </figure>
 
         <figure class="figure">
-          <img src="assets/figures/top_terms.png" alt="Top terms plot" />
-          <figcaption><strong>Figure:</strong> Top TF-IDF terms that distinguish sports vs politics. (Generate this plot.)</figcaption>
+            <img src="assets/figures/word_count_dist.png" alt="Word count distribution plot" />
+            <figcaption>
+            <strong>EDA 2:</strong> Document length distribution (word counts) by class.
+            Significant overlap suggests that vocabulary (not length alone) drives classification.
+            </figcaption>
         </figure>
-      </section>
+
+        <div class="grid2">
+            <div class="card">
+            <h3>What length tells us</h3>
+            <ul>
+                <li>If one class is consistently shorter, models might partially exploit length as a shortcut.</li>
+                <li>Large overlap usually implies the discriminative signal is mostly lexical/phrase-level.</li>
+                <li>Very short documents are typically harder due to low information content.</li>
+            </ul>
+            </div>
+
+            <div class="card">
+            <h3>Vocabulary signals (quick sanity check)</h3>
+            <ul>
+                <li>Sports should surface match/event terminology (e.g., teams, scores, tournaments).</li>
+                <li>Politics should surface institutional terminology (e.g., parties, elections, governance).</li>
+                <li>Overlap (e.g., “campaign”, “win”, country names) can create confusion cases.</li>
+            </ul>
+            </div>
+        </div>
+
+        <h3>EDA 3: Word clouds (class vocabulary snapshot)</h3>
+        <p>
+            Word clouds provide a fast qualitative view of high-frequency vocabulary within each class.
+            While not a quantitative feature-importance method, they are useful for sanity-checking:
+            the dominant words should align with the intended labels.
+        </p>
+
+        <div class="grid2">
+            <figure class="figure">
+            <img src="assets/figures/wordcloud_sport.png" alt="Word cloud for Sport class" />
+            <figcaption><strong>EDA 3a:</strong> Word cloud for <code>sport</code>.</figcaption>
+            </figure>
+
+            <figure class="figure">
+            <img src="assets/figures/wordcloud_politics.png" alt="Word cloud for Politics class" />
+            <figcaption><strong>EDA 3b:</strong> Word cloud for <code>politics</code>.</figcaption>
+            </figure>
+        </div>
+
+        <div class="callout">
+            <strong>Important note:</strong> Word clouds are qualitative.
+            Our final conclusions will rely on quantitative evaluation of models trained with BoW/TF-IDF and n-grams.
+        </div>
+
+        <div class="card">
+            <h3>EDA summary</h3>
+            <ul>
+            <li>We preserve class ratio with a stratified split and report Accuracy + Macro-F1.</li>
+            <li>Document length overlap suggests vocabulary/phrases are the main discriminative signal.</li>
+            <li>Next, we compare BoW vs TF-IDF and at least three ML models under the same evaluation protocol.</li>
+            </ul>
+        </div>
+        </section>
 
       <section id="methods">
         <h2>4. Feature Representations + Models</h2>

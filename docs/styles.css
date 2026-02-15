@@ -1,21 +1,20 @@
 :root{
-  --bg: #f5f7fb;
+  --bg: #f5f5f5;
   --panel: #ffffff;
-  --text: #1f2430;
-  --muted: #5c6370;
-  --line: rgba(0,0,0,0.08);
-  --link: #2f6fed;
+  --text: #111318;
+  --muted: #5a616e;
+  --line: rgba(17,19,24,0.10);
+  --link: #0b57d0;
   --maxw: 860px;
   --radius: 14px;
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+
 body{
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  background: radial-gradient(1200px 600px at 30% -10%, rgba(138,180,255,0.20), transparent 60%),
-              radial-gradient(900px 600px at 100% 0%, rgba(255,138,191,0.12), transparent 55%),
-              var(--bg);
+  background: var(--bg);
   color: var(--text);
   line-height: 1.65;
 }
@@ -34,7 +33,7 @@ a:hover{text-decoration:underline}
   top: 0;
   z-index: 50;
   backdrop-filter: blur(10px);
-  background: rgba(11,12,15,0.75);
+  background: rgba(245,245,245,0.92);
   border-bottom: 1px solid var(--line);
 }
 
@@ -56,7 +55,7 @@ a:hover{text-decoration:underline}
 
 .dot{
   width:10px;height:10px;border-radius:50%;
-  background: linear-gradient(45deg, #8ab4ff, #ff8abf);
+  background: linear-gradient(45deg, #0b57d0, #ff4d8d);
   display:inline-block;
 }
 
@@ -65,7 +64,6 @@ a:hover{text-decoration:underline}
   flex-wrap:wrap;
   gap: 12px;
   font-size: 14px;
-  color: var(--muted);
 }
 .topnav a{color:var(--muted)}
 .topnav a:hover{color:var(--text)}
@@ -77,6 +75,7 @@ a:hover{text-decoration:underline}
 .hero{
   padding: 16px 0 10px;
 }
+
 h1{
   font-size: 42px;
   line-height: 1.15;
@@ -100,13 +99,14 @@ h1{
 .toc{
   margin: 26px 0;
   padding: 18px 18px;
-  background: rgba(17,19,26,0.85);
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
 .toc h2{margin:0 0 10px;font-size:16px}
 .toc ol{margin:0;padding-left: 18px;color:var(--muted)}
 .toc a{color:var(--muted)}
+.toc a:hover{color:var(--text)}
 
 h2{
   font-size: 26px;
@@ -121,11 +121,8 @@ h4{
   margin: 0 0 6px;
 }
 
-p,li{color: var(--text)}
-ul,ol{color: var(--text)}
-
 .card{
-  background: rgba(17,19,26,0.85);
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 16px 16px;
@@ -153,15 +150,14 @@ ul,ol{color: var(--text)}
   margin: 18px 0;
   padding: 14px 14px;
   border-radius: var(--radius);
-  border: 1px solid rgba(138,180,255,0.25);
-  background: rgba(138,180,255,0.10);
-  color: var(--text);
+  border: 1px solid rgba(11,87,208,0.18);
+  background: rgba(11,87,208,0.06);
 }
 
 .figure{
   margin: 18px 0;
   padding: 14px;
-  background: rgba(17,19,26,0.65);
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
